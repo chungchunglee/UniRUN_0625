@@ -22,22 +22,54 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
-        
+
+        if (isDead == true)
+        {
+            Die();
+            return;
+        }
+        if (Input.GetMouseButtonDown(0) && jumpCount < 2)
+        {
+            jumpCount++;
+            playerrigidbody2D.velocity = Vector2.zero;
+            playerrigidbody2D.AddForce(new Vector2(0, jumpForce));
+            playerAudio.Play();
+        }
+        else if (Input.GetMouseButtonUp(0) && playerrigidbody2D.velocity.y > 0)
+        {
+            playerrigidbody2D.velocity = playerrigidbody2D.velocity * 0.5f;
+        }
+
+        animator.SetBool("Grounded", isGrounded);
+
     }
     private void Die()
     {
-        //Á×À½ ±¸Çö
+       //Dead µ¿ÀÛ ±¸Çö
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        //DeadÁ¸ Triggering
+        // Dead º¯¼ö Set
+        if (other.tag == "Dead")
+        {
+            isDead = true;
+        }
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D other)
     {
+        //if(other.gameObject.tag == "Ground")
+        {
+            isGrounded = true;
+            jumpCount = 0;
+        }
         //¹Ù´Ú °¨Áö
     }
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnCollisionExit2D(Collision2D other)
     {
+    //    if (other.gameObject.tag == "Ground")
+        {
+            isGrounded = false;
+        }
         //¹Ù´Ú ¶³¾îÁü °¨Áö
     }
 

@@ -25,7 +25,6 @@ public class PlayerController : MonoBehaviour
 
         if (isDead == true)
         {
-            Die();
             return;
         }
         if (Input.GetMouseButtonDown(0) && jumpCount < 2)
@@ -45,19 +44,29 @@ public class PlayerController : MonoBehaviour
     }
     private void Die()
     {
+        animator.SetTrigger("Dead");
+        Debug.Log(playerAudio.clip+"Player.Dead");
+        playerAudio.clip = deathClip;
+        playerAudio.Play();
+        playerrigidbody2D.velocity = Vector2.zero;
+        isDead = true;
+        GameManager.instance.OnPlayerDead();
        //Dead 동작 구현
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Dead 변수 Set
-        if (other.tag == "Dead")
+        // Dead 실행
+        Debug.Log(other.name+"Dead");
+        if (other.tag == "Dead" && !isDead)
         {
-            isDead = true;
+            Debug.Log("Dead2");
+            Die();
         }
     }
     private void OnCollisionEnter2D(Collision2D other)
     {
-        //if(other.gameObject.tag == "Ground")
+        //Debug.Log(other.gameObject.tag);
+        if(other.contacts[0].normal.y > 0.7f &&other.gameObject.tag == "Ground")
         {
             isGrounded = true;
             jumpCount = 0;
@@ -66,7 +75,7 @@ public class PlayerController : MonoBehaviour
     }
     private void OnCollisionExit2D(Collision2D other)
     {
-    //    if (other.gameObject.tag == "Ground")
+        if (other.gameObject.tag == "Ground")
         {
             isGrounded = false;
         }

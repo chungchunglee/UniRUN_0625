@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
             Debug.LogWarning("게임메니저 두개 이상 존재");
             Destroy(gameObject);
         }
+        //DontDestroyOnLoad(gameObject);
     }
 
     // Update is called once per frame
